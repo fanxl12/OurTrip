@@ -8,6 +8,6 @@
         android:onClick="toMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="测试百度地图" />
+        android:text="去百度地图" />
 
 </RelativeLayout>
