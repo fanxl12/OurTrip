@@ -18,6 +18,8 @@ import com.fanxl.ourtrip.utils.UtilHelper;
 public class LoginActivity extends Activity implements OnClickListener{
 	
 	private EditText login_username, login_password;
+	public static final int REGISTER = 1;
+	public static final int FORGET_PASSWORD = 2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +39,20 @@ public class LoginActivity extends Activity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
+		Intent intent; 
 		switch (v.getId()) {
 		case R.id.login_login:
 			logion();
 			break;
 		case R.id.login_register:
-			startActivity(new Intent(LoginActivity.this, Regisiter.class));
+			intent = new Intent(LoginActivity.this, Regisiter.class);
+			intent.putExtra("type", REGISTER);
+			startActivity(intent);
 			break;
 		case R.id.login_forget_pw:
-			int num = 0;
-			System.out.println(10/num);
+			intent = new Intent(LoginActivity.this, Regisiter.class);
+			intent.putExtra("type", FORGET_PASSWORD);
+			startActivity(intent);
 			break;
 
 		default:

@@ -16,7 +16,20 @@
     <LinearLayout 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
+        
+        <TextView 
+            style="@style/mainBottonStyle"
+            android:text="首页" />
+        <TextView 
+            style="@style/mainBottonStyle"
+            android:text="计划" />
+        <TextView 
+            style="@style/mainBottonStyle"
+            android:text="我的" />
+        <TextView 
+            style="@style/mainBottonStyle"
+            android:text="关于" />
         
     </LinearLayout>
 </LinearLayout>
