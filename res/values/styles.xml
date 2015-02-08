@@ -27,5 +27,10 @@
     <style name="mainBottonStyle" parent="@style/averageStyle">
         <item name="android:padding">10dp</item>
     </style>
+    
+    <style name="titleTextStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
 
 </resources>

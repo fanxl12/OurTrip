@@ -37,6 +37,31 @@ public final class R {
         public static final int smssdk_country_group_z=0x7f050019;
     }
     public static final class attr {
+        /** <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int borderRadius=0x7f010000;
+        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+         */
+        public static final int src=0x7f010002;
+        /** <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>circle</code></td><td>0</td><td></td></tr>
+<tr><td><code>round</code></td><td>1</td><td></td></tr>
+</table>
+         */
+        public static final int type=0x7f010001;
     }
     public static final class color {
         public static final int smssdk_black=0x7f060007;
@@ -54,99 +79,111 @@ public final class R {
         public static final int a02=0x7f020001;
         public static final int a03=0x7f020002;
         public static final int a04=0x7f020003;
-        public static final int bg_map_bottom=0x7f020004;
-        public static final int ic_launcher=0x7f020005;
-        public static final int img_border=0x7f020006;
-        public static final int location_tips=0x7f020007;
-        public static final int maker=0x7f020008;
-        public static final int map_zan=0x7f020009;
-        public static final int navi_map_gps_locked=0x7f02000a;
-        public static final int smssdk_back_arrow=0x7f02000b;
-        public static final int smssdk_back_arrow2=0x7f02000c;
-        public static final int smssdk_btn_disenable=0x7f02000d;
-        public static final int smssdk_btn_enable=0x7f02000e;
-        public static final int smssdk_cl_divider=0x7f02000f;
-        public static final int smssdk_clear_search=0x7f020010;
-        public static final int smssdk_corners_bg=0x7f020011;
-        public static final int smssdk_corners_bg_nor=0x7f020012;
-        public static final int smssdk_corners_bg_pre=0x7f020013;
-        public static final int smssdk_country_bg_selector=0x7f020014;
-        public static final int smssdk_country_group_scroll_down=0x7f020015;
-        public static final int smssdk_country_group_scroll_up=0x7f020016;
-        public static final int smssdk_cp_default_avatar=0x7f020017;
-        public static final int smssdk_default_avatar=0x7f020018;
-        public static final int smssdk_dialog_back=0x7f020019;
-        public static final int smssdk_dialog_bg=0x7f02001a;
-        public static final int smssdk_dialog_btn_back=0x7f02001b;
-        public static final int smssdk_dialog_btn_nor=0x7f020023;
-        public static final int smssdk_dialog_btn_pre=0x7f020024;
-        public static final int smssdk_edittext_bg_selector=0x7f02001c;
-        public static final int smssdk_input_bg_focus=0x7f02001d;
-        public static final int smssdk_input_bg_normal=0x7f02001e;
-        public static final int smssdk_input_bg_special_focus=0x7f02001f;
-        public static final int smssdk_input_bg_special_normal=0x7f020020;
-        public static final int smssdk_search_icon=0x7f020021;
-        public static final int smssdk_sharesdk_icon=0x7f020022;
+        public static final int back_bg=0x7f020004;
+        public static final int bg_map_bottom=0x7f020005;
+        public static final int btn_back_white_normal=0x7f020006;
+        public static final int btn_back_white_pressed=0x7f020007;
+        public static final int header=0x7f020008;
+        public static final int ic_launcher=0x7f020009;
+        public static final int img_border=0x7f02000a;
+        public static final int img_default_persion=0x7f02000b;
+        public static final int location_tips=0x7f02000c;
+        public static final int maker=0x7f02000d;
+        public static final int map_zan=0x7f02000e;
+        public static final int navi_map_gps_locked=0x7f02000f;
+        public static final int smssdk_back_arrow=0x7f020010;
+        public static final int smssdk_back_arrow2=0x7f020011;
+        public static final int smssdk_btn_disenable=0x7f020012;
+        public static final int smssdk_btn_enable=0x7f020013;
+        public static final int smssdk_cl_divider=0x7f020014;
+        public static final int smssdk_clear_search=0x7f020015;
+        public static final int smssdk_corners_bg=0x7f020016;
+        public static final int smssdk_corners_bg_nor=0x7f020017;
+        public static final int smssdk_corners_bg_pre=0x7f020018;
+        public static final int smssdk_country_bg_selector=0x7f020019;
+        public static final int smssdk_country_group_scroll_down=0x7f02001a;
+        public static final int smssdk_country_group_scroll_up=0x7f02001b;
+        public static final int smssdk_cp_default_avatar=0x7f02001c;
+        public static final int smssdk_default_avatar=0x7f02001d;
+        public static final int smssdk_dialog_back=0x7f02001e;
+        public static final int smssdk_dialog_bg=0x7f02001f;
+        public static final int smssdk_dialog_btn_back=0x7f020020;
+        public static final int smssdk_dialog_btn_nor=0x7f020029;
+        public static final int smssdk_dialog_btn_pre=0x7f02002a;
+        public static final int smssdk_edittext_bg_selector=0x7f020021;
+        public static final int smssdk_input_bg_focus=0x7f020022;
+        public static final int smssdk_input_bg_normal=0x7f020023;
+        public static final int smssdk_input_bg_special_focus=0x7f020024;
+        public static final int smssdk_input_bg_special_normal=0x7f020025;
+        public static final int smssdk_search_icon=0x7f020026;
+        public static final int smssdk_sharesdk_icon=0x7f020027;
+        public static final int travel_img_avatar_default=0x7f020028;
     }
     public static final class id {
-        public static final int bmapView=0x7f0a0006;
-        public static final int btn_add=0x7f0a0020;
-        public static final int btn_dialog_cancel=0x7f0a0015;
-        public static final int btn_dialog_ok=0x7f0a0014;
-        public static final int btn_invite=0x7f0a001a;
-        public static final int btn_next=0x7f0a002d;
-        public static final int btn_submit=0x7f0a0027;
-        public static final int clContact=0x7f0a001b;
-        public static final int clCountry=0x7f0a0021;
-        public static final int et_put_identify=0x7f0a0024;
-        public static final int et_write_phone=0x7f0a002c;
-        public static final int id_add_overlay=0x7f0a0039;
-        public static final int id_info_distance=0x7f0a000a;
-        public static final int id_info_img=0x7f0a0008;
-        public static final int id_info_name=0x7f0a0009;
-        public static final int id_info_zan=0x7f0a000b;
-        public static final int id_maker_ly=0x7f0a0007;
-        public static final int id_map_common=0x7f0a0032;
-        public static final int id_map_location=0x7f0a0035;
-        public static final int id_map_mode_common=0x7f0a0036;
-        public static final int id_map_mode_compass=0x7f0a0038;
-        public static final int id_map_mode_following=0x7f0a0037;
-        public static final int id_map_site=0x7f0a0033;
-        public static final int id_map_traffic=0x7f0a0034;
-        public static final int ivSearch=0x7f0a0030;
-        public static final int iv_clear=0x7f0a0025;
-        public static final int iv_contact=0x7f0a001d;
-        public static final int iv_contact_icon=0x7f0a0016;
-        public static final int llSearch=0x7f0a0031;
-        public static final int llTitle=0x7f0a002f;
-        public static final int ll_back=0x7f0a002e;
-        public static final int login_forget_pw=0x7f0a0004;
-        public static final int login_login=0x7f0a0003;
-        public static final int login_password=0x7f0a0002;
-        public static final int login_register=0x7f0a0005;
-        public static final int login_username=0x7f0a0001;
-        public static final int main_vp=0x7f0a0000;
-        public static final int new_passowrd=0x7f0a0011;
-        public static final int regisiter_code=0x7f0a000f;
-        public static final int regisiter_passowrd=0x7f0a000d;
-        public static final int regisiter_phoneNumber=0x7f0a000e;
-        public static final int regisiter_username=0x7f0a000c;
-        public static final int register_register=0x7f0a0012;
-        public static final int register_send_again=0x7f0a0010;
-        public static final int rl_country=0x7f0a0029;
-        public static final int rl_lv_item_bg=0x7f0a001c;
-        public static final int tv_contact=0x7f0a001f;
-        public static final int tv_contact_name=0x7f0a0017;
-        public static final int tv_contact_phones=0x7f0a0018;
-        public static final int tv_country=0x7f0a002a;
-        public static final int tv_country_num=0x7f0a002b;
-        public static final int tv_dialog_hint=0x7f0a0013;
-        public static final int tv_identify_notify=0x7f0a0022;
-        public static final int tv_invite_hint=0x7f0a0019;
-        public static final int tv_name=0x7f0a001e;
-        public static final int tv_phone=0x7f0a0023;
-        public static final int tv_title=0x7f0a0028;
-        public static final int tv_unreceive_identify=0x7f0a0026;
+        public static final int bmapView=0x7f0a0008;
+        public static final int btn_add=0x7f0a0023;
+        public static final int btn_dialog_cancel=0x7f0a0018;
+        public static final int btn_dialog_ok=0x7f0a0017;
+        public static final int btn_invite=0x7f0a001d;
+        public static final int btn_next=0x7f0a0030;
+        public static final int btn_submit=0x7f0a002a;
+        public static final int center_ll_header=0x7f0a000e;
+        public static final int circle=0x7f0a0000;
+        public static final int clContact=0x7f0a001e;
+        public static final int clCountry=0x7f0a0024;
+        public static final int et_put_identify=0x7f0a0027;
+        public static final int et_write_phone=0x7f0a002f;
+        public static final int id_add_overlay=0x7f0a003f;
+        public static final int id_info_distance=0x7f0a000c;
+        public static final int id_info_img=0x7f0a000a;
+        public static final int id_info_name=0x7f0a000b;
+        public static final int id_info_zan=0x7f0a000d;
+        public static final int id_maker_ly=0x7f0a0009;
+        public static final int id_map_common=0x7f0a0038;
+        public static final int id_map_location=0x7f0a003b;
+        public static final int id_map_mode_common=0x7f0a003c;
+        public static final int id_map_mode_compass=0x7f0a003e;
+        public static final int id_map_mode_following=0x7f0a003d;
+        public static final int id_map_site=0x7f0a0039;
+        public static final int id_map_traffic=0x7f0a003a;
+        public static final int ivSearch=0x7f0a0033;
+        public static final int iv_clear=0x7f0a0028;
+        public static final int iv_contact=0x7f0a0020;
+        public static final int iv_contact_icon=0x7f0a0019;
+        public static final int llSearch=0x7f0a0034;
+        public static final int llTitle=0x7f0a0032;
+        public static final int ll_back=0x7f0a0031;
+        public static final int login_forget_pw=0x7f0a0006;
+        public static final int login_login=0x7f0a0005;
+        public static final int login_password=0x7f0a0004;
+        public static final int login_register=0x7f0a0007;
+        public static final int login_username=0x7f0a0003;
+        public static final int main_vp=0x7f0a0002;
+        public static final int new_passowrd=0x7f0a0014;
+        public static final int regisiter_code=0x7f0a0012;
+        public static final int regisiter_passowrd=0x7f0a0010;
+        public static final int regisiter_phoneNumber=0x7f0a0011;
+        public static final int regisiter_username=0x7f0a000f;
+        public static final int register_register=0x7f0a0015;
+        public static final int register_send_again=0x7f0a0013;
+        public static final int rl_country=0x7f0a002c;
+        public static final int rl_lv_item_bg=0x7f0a001f;
+        public static final int round=0x7f0a0001;
+        public static final int title_bt_left=0x7f0a0035;
+        public static final int title_tv_info=0x7f0a0036;
+        public static final int title_tv_right=0x7f0a0037;
+        public static final int tv_contact=0x7f0a0022;
+        public static final int tv_contact_name=0x7f0a001a;
+        public static final int tv_contact_phones=0x7f0a001b;
+        public static final int tv_country=0x7f0a002d;
+        public static final int tv_country_num=0x7f0a002e;
+        public static final int tv_dialog_hint=0x7f0a0016;
+        public static final int tv_identify_notify=0x7f0a0025;
+        public static final int tv_invite_hint=0x7f0a001c;
+        public static final int tv_name=0x7f0a0021;
+        public static final int tv_phone=0x7f0a0026;
+        public static final int tv_title=0x7f0a002b;
+        public static final int tv_unreceive_identify=0x7f0a0029;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -169,7 +206,8 @@ public final class R {
         public static final int smssdk_search_title_layout=0x7f030011;
         public static final int smssdk_send_msg_dialog=0x7f030012;
         public static final int smssdk_title_layout=0x7f030013;
-        public static final int trip=0x7f030014;
+        public static final int title=0x7f030014;
+        public static final int trip=0x7f030015;
     }
     public static final class menu {
         public static final int main=0x7f090000;
@@ -274,5 +312,68 @@ public final class R {
         public static final int CommonDialog=0x7f080001;
         public static final int averageStyle=0x7f080003;
         public static final int mainBottonStyle=0x7f080004;
+        public static final int titleTextStyle=0x7f080005;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a CornerImageView.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #CornerImageView_borderRadius com.fanxl.ourtrip:borderRadius}</code></td><td></td></tr>
+           <tr><td><code>{@link #CornerImageView_src com.fanxl.ourtrip:src}</code></td><td></td></tr>
+           <tr><td><code>{@link #CornerImageView_type com.fanxl.ourtrip:type}</code></td><td></td></tr>
+           </table>
+           @see #CornerImageView_borderRadius
+           @see #CornerImageView_src
+           @see #CornerImageView_type
+         */
+        public static final int[] CornerImageView = {
+            0x7f010000, 0x7f010001, 0x7f010002
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.fanxl.ourtrip.R.attr#borderRadius}
+          attribute's value can be found in the {@link #CornerImageView} array.
+
+
+          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
+Available units are: px (pixels), dp (density-independent pixels), sp (scaled pixels based on preferred font size),
+in (inches), mm (millimeters).
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.fanxl.ourtrip:borderRadius
+        */
+        public static final int CornerImageView_borderRadius = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.fanxl.ourtrip.R.attr#src}
+          attribute's value can be found in the {@link #CornerImageView} array.
+
+
+          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
+or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          @attr name com.fanxl.ourtrip:src
+        */
+        public static final int CornerImageView_src = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.fanxl.ourtrip.R.attr#type}
+          attribute's value can be found in the {@link #CornerImageView} array.
+
+
+          <p>Must be one of the following constant values.</p>
+<table>
+<colgroup align="left" />
+<colgroup align="left" />
+<colgroup align="left" />
+<tr><th>Constant</th><th>Value</th><th>Description</th></tr>
+<tr><td><code>circle</code></td><td>0</td><td></td></tr>
+<tr><td><code>round</code></td><td>1</td><td></td></tr>
+</table>
+          @attr name com.fanxl.ourtrip:type
+        */
+        public static final int CornerImageView_type = 1;
+    };
 }

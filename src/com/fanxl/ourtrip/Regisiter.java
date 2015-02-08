@@ -64,6 +64,8 @@ public class Regisiter extends Activity {
 				break;
 			case UPDATE_SUCCESS:
 				UtilHelper.showMsg(Regisiter.this, "修改密码成功！");
+				startActivity(new Intent(Regisiter.this, MainActivity.class));
+				finish();
 				break;
 			case UPDATE_FAIL:
 				UtilHelper.showMsg(Regisiter.this, "修改密码失败，请重试");

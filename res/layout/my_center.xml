@@ -1,12 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fanxl="http://schemas.android.com/apk/res/com.fanxl.ourtrip"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    
-    <TextView 
-        android:layout_width="wrap_content"
+
+    <include layout="@layout/title" />
+
+    <LinearLayout
+        android:id="@+id/center_ll_header"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="我的中心"/>
+        android:orientation="horizontal"
+        android:background="#76ff0000"
+        android:padding="16dp" >
+
+        <com.fanxl.ourtrip.widget.CornerImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            fanxl:src="@drawable/img_default_persion"
+            fanxl:type="circle" >
+        </com.fanxl.ourtrip.widget.CornerImageView>
+    </LinearLayout>
 
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 public class Home extends Fragment{
 	
@@ -19,8 +20,14 @@ public class Home extends Fragment{
 			if(parent!=null)parent.removeView(rootView);
 		}else{
 			rootView = inflater.inflate(R.layout.home, container, false);
+			initView();
 		}
 		return rootView;
+	}
+
+	private void initView() {
+		TextView title_tv_info = (TextView) rootView.findViewById(R.id.title_tv_info);
+		title_tv_info.setText("首页");
 	}
 
 }
