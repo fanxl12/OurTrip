@@ -90,40 +90,4 @@ public class MyCenter extends Fragment implements OnClickListener{
 			break;
 		}
 	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.center_friend_location:
-			startActivity(new Intent(getActivity(), MapActivity.class));
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.center_friend_location:
-			startActivity(new Intent(getActivity(), MapActivity.class));
-			break;
-
-		default:
-			break;
-		}
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.center_friend_location:
-			startActivity(new Intent(getActivity(), MapActivity.class));
-			break;
-
-		default:
-			break;
-		}
-	}
 }
