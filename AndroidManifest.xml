@@ -55,6 +55,8 @@
         
         <activity android:name=".Regisiter" >
         </activity>
+        <activity android:name=".AddFriends" >
+        </activity>
 
         <service
             android:name="com.baidu.location.f"

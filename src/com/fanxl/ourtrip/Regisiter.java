@@ -28,7 +28,6 @@ import com.fanxl.ourtrip.utils.UtilHelper;
 
 /**
  * 注册页面
- * 
  * @author fanxl
  * 
  */

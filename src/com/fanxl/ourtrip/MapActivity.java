@@ -185,7 +185,7 @@ public class MapActivity extends Activity {
 		option.setCoorType("bd09ll");
 		option.setIsNeedAddress(true);
 		option.setOpenGps(true);
-		option.setScanSpan(1000);
+		option.setScanSpan(10000);
 		mLocationClient.setLocOption(option);
 		//初始化自定义定位图标
 		mIconLocation = BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked);
@@ -390,7 +390,7 @@ public class MapActivity extends Activity {
 			@Override
 			public void onSuccess(List<MyLocation> myLocations) {
 				if(myLocations!=null && myLocations.size()>0){
-					TripData.getInstance().setUserId(myLocations.get(0).getObjectId());
+					TripData.getInstance().setLocationObjectId(myLocations.get(0).getObjectId());
 					handler.sendEmptyMessage(GET_LOCATION_SUCCESS);
 				}
 			}

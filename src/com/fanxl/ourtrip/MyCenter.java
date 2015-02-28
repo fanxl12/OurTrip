@@ -59,6 +59,7 @@ public class MyCenter extends Fragment implements OnClickListener{
 		});
 		
 		rootView.findViewById(R.id.center_friend_location).setOnClickListener(this);
+		rootView.findViewById(R.id.center_add_friend).setOnClickListener(this);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN) 
@@ -85,7 +86,9 @@ public class MyCenter extends Fragment implements OnClickListener{
 		case R.id.center_friend_location:
 			startActivity(new Intent(getActivity(), MapActivity.class));
 			break;
-
+		case R.id.center_add_friend:
+			startActivity(new Intent(getActivity(), AddFriends.class));
+			break;
 		default:
 			break;
 		}

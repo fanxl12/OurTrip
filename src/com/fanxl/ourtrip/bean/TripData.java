@@ -10,6 +10,7 @@ public class TripData {
 	
 	private static class TripHolder{
 		//静态初始化器，由JVM来保证线程安全
+		
 		private static TripData tripData = new TripData();
 	}
 	
