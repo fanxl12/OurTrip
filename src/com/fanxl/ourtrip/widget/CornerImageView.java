@@ -106,7 +106,6 @@ public class CornerImageView extends View{
 		switch (type) {
 		case TYPE_CIRCLE:
 			int min = Math.min(mWidth, mHeight);
-			System.out.println("我画过圆了");
 			mSrc = Bitmap.createScaledBitmap(mSrc, min, min, false);
 			canvas.drawBitmap(createCircleImage(mSrc, min), 0, 0, null);
 			break;

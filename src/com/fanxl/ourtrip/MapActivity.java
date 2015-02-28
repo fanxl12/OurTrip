@@ -5,6 +5,8 @@ import java.util.List;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -13,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.bmob.v3.BmobQuery;
@@ -32,6 +33,7 @@ import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
 import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -43,7 +45,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.fanxl.ourtrip.MyOrientationListener.OnOrientationListener;
-import com.fanxl.ourtrip.bean.Info;
+import com.fanxl.ourtrip.bean.Friend;
 import com.fanxl.ourtrip.bean.MyLocation;
 import com.fanxl.ourtrip.bean.TripData;
 import com.fanxl.ourtrip.utils.UtilHelper;
@@ -76,6 +78,10 @@ public class MapActivity extends Activity {
 	//保存位置到服务器
 	private MyLocation myLocation;
 	private final int GET_LOCATION_SUCCESS = 100;
+	private TripData tripData;
+	private SharedPreferences sp;
+	private final String latitude = "LATITUDE";
+	private final String longtitude = "LONGTITUDE";
 	
 	@SuppressLint("HandlerLeak") 
 	private Handler handler = new Handler(){
@@ -115,26 +121,26 @@ public class MapActivity extends Activity {
 			public boolean onMarkerClick(Marker marker) {
 				
 				Bundle extraInfo = marker.getExtraInfo();
-				Info info = (Info) extraInfo.getSerializable("info");
-				ImageView iv = (ImageView) mMarkerLy
-						.findViewById(R.id.id_info_img);
-				TextView distance = (TextView)findViewById(R.id.id_info_distance);
-				TextView name = (TextView) mMarkerLy
-						.findViewById(R.id.id_info_name);
-				TextView zan = (TextView) mMarkerLy
-						.findViewById(R.id.id_info_zan);
-				iv.setImageResource(info.getImgId());
-				distance.setText(info.getDistance());
-				name.setText(info.getName());
-				zan.setText(info.getZan() + "");
+				Friend friend = (Friend) extraInfo.getSerializable("friend");
+//				ImageView iv = (ImageView) mMarkerLy
+//						.findViewById(R.id.id_info_img);
+//				TextView distance = (TextView)findViewById(R.id.id_info_distance);
+//				TextView name = (TextView) mMarkerLy
+//						.findViewById(R.id.id_info_name);
+//				TextView zan = (TextView) mMarkerLy
+//						.findViewById(R.id.id_info_zan);
+//				iv.setImageResource(info.getImgId());
+//				distance.setText(info.getDistance());
+//				name.setText(info.getName());
+//				zan.setText(info.getZan() + "");
 				
 				InfoWindow infoWindow;
 				TextView tv = new TextView(mContext);
-				tv.setText(info.getName());
+				tv.setText("好友:"+friend.getFriendName());
 				tv.setTextColor(Color.WHITE);
+				tv.setTextSize(12);
 				tv.setPadding(30, 20, 30, 50);
 				tv.setBackgroundResource(R.drawable.location_tips);
-				
 				
 				BitmapDescriptor bitView = BitmapDescriptorFactory.fromView(tv);
 				
@@ -150,7 +156,7 @@ public class MapActivity extends Activity {
 					}
 				});
 				mBaiduMap.showInfoWindow(infoWindow);
-				mMarkerLy.setVisibility(View.VISIBLE);
+				//mMarkerLy.setVisibility(View.VISIBLE);
 				return true;
 			}
 		});
@@ -173,7 +179,8 @@ public class MapActivity extends Activity {
 	private void initLoaction() {
 		
 		myLocation = new MyLocation();
-		myLocation.setUserId(TripData.getInstance().getUserId());
+		tripData = TripData.getInstance();
+		myLocation.setUserId(tripData.getUserId());
 		
 		mLocationMode = LocationMode.NORMAL;
 		
@@ -185,7 +192,7 @@ public class MapActivity extends Activity {
 		option.setCoorType("bd09ll");
 		option.setIsNeedAddress(true);
 		option.setOpenGps(true);
-		option.setScanSpan(10000);
+		option.setScanSpan(20000);
 		mLocationClient.setLocOption(option);
 		//初始化自定义定位图标
 		mIconLocation = BitmapDescriptorFactory.fromResource(R.drawable.navi_map_gps_locked);
@@ -203,7 +210,11 @@ public class MapActivity extends Activity {
 	private void initView() {
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
-		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(15.0f);
+		
+		sp = getSharedPreferences("OutTrip", Activity.MODE_PRIVATE);
+		LatLng cenpt = new LatLng(Double.parseDouble(sp.getString(latitude, "31.023497")), Double.parseDouble(sp.getString(latitude, "121.415359"))); 
+		MapStatus mapStatus = new MapStatus.Builder().target(cenpt).zoom(15.0f).build();
+		MapStatusUpdate msu = MapStatusUpdateFactory.newMapStatus(mapStatus);
 		mBaiduMap.setMapStatus(msu);
 	}
 	
@@ -255,6 +266,11 @@ public class MapActivity extends Activity {
 			
 			myLocation.setmLatitude(mLatitude);
 			myLocation.setmLongtitude(mLongtitude);
+			myLocation.setAddress(location.getAddrStr());
+			
+//			tripData.setmLatitude(mLatitude);
+//			tripData.setmLongtitude(mLongtitude);
+//			tripData.setAddress(location.getAddrStr());
 			
 			MyLocationData data = new MyLocationData.Builder()
 			.direction(mCurrentX)
@@ -269,11 +285,15 @@ public class MapActivity extends Activity {
 			
 			if(isFistIn){
 				location();
+				Editor editor = sp.edit();
+				editor.putString(latitude, mLatitude+"");
+				editor.putString(longtitude, mLongtitude+"");
+				editor.commit();
 				UtilHelper.showMsg(mContext, location.getAddrStr());
 				isFistIn = false;
 			}
-			
 			getObjectId();
+			getNearFriends();
 		}
 
 		
@@ -325,38 +345,13 @@ public class MapActivity extends Activity {
 			mLocationMode = LocationMode.COMPASS;
 			break;
 		case R.id.id_add_overlay:
-			addOverlay(Info.infos);
+			//addOverlay(Info.infos);
 			break;
 
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * 添加覆盖物
-	 * @param infos
-	 */
-	private void addOverlay(List<Info> infos) {
-		
-		mBaiduMap.clear();
-		LatLng latLng = null;
-		Marker marker = null;
-		OverlayOptions options;
-		
-		for (Info info : infos) {
-			// 经纬度
-			latLng = new LatLng(info.getLatitude(), info.getLongitude());
-			// 图标
-			options = new MarkerOptions().position(latLng).icon(mMarker).zIndex(5);
-			marker = (Marker) mBaiduMap.addOverlay(options);
-			Bundle bundle = new Bundle();
-			bundle.putSerializable("info", info);
-			marker.setExtraInfo(bundle);
-		}
-		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
-		mBaiduMap.animateMapStatus(msu);
 	}
 	
 	private void getObjectId(){
@@ -367,6 +362,9 @@ public class MapActivity extends Activity {
 		}
 	}
 	
+	/**
+	 * 定位成功，更新位置
+	 */
 	private void updateLocation(){
 		myLocation.update(this, TripData.getInstance().getLocationObjectId(), new UpdateListener() {
 			
@@ -382,6 +380,9 @@ public class MapActivity extends Activity {
 		});
 	}
 	
+	/**
+	 * 获取位置的ObjectId,用于更新位置信息
+	 */
 	private void getLocationObjectId(){
 		BmobQuery<MyLocation> bmobQuery = new BmobQuery<MyLocation>();
 		bmobQuery.addWhereEqualTo("userId", TripData.getInstance().getUserId());
@@ -400,7 +401,47 @@ public class MapActivity extends Activity {
 				
 			}
 		});
+	}
+	
+	private void getNearFriends(){
+		BmobQuery<Friend> bmobQuery = new BmobQuery<Friend>();
+		bmobQuery.addWhereEqualTo("userId", tripData.getUserId());
+		bmobQuery.findObjects(this, new FindListener<Friend>() {
+
+			@Override
+			public void onSuccess(List<Friend> friends) {
+				if(friends!=null && friends.size()>0)locationFriends(friends);
+			}
+
+			@Override
+			public void onError(int errorCode, String error) {
+				
+			}
+		});
+	}
+	
+	/**
+	 * 显示朋友的位置
+	 * @param locations
+	 */
+	private void locationFriends(List<Friend> friends){
+		mBaiduMap.clear();
+		LatLng latLng = null;
+		Marker marker = null;
+		OverlayOptions options;
 		
+		for (Friend friend : friends) {
+			// 经纬度
+			latLng = new LatLng(friend.getmLatitude(), friend.getmLongtitude());
+			// 图标
+			options = new MarkerOptions().position(latLng).icon(mMarker).zIndex(5);
+			marker = (Marker) mBaiduMap.addOverlay(options);
+			Bundle bundle = new Bundle();
+			bundle.putSerializable("friend", friend);
+			marker.setExtraInfo(bundle);
+		}
+		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+		mBaiduMap.animateMapStatus(msu);
 	}
 
 }

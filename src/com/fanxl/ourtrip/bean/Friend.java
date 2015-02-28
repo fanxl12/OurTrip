@@ -9,6 +9,9 @@ public class Friend extends BmobObject{
 	private String friendName;
 	private String userId;
 	private String sex;
+	private double mLatitude;
+	private double mLongtitude;
+	private String address;
 	
 	public String getFriendObjectId() {
 		return friendObjectId;
@@ -36,5 +39,23 @@ public class Friend extends BmobObject{
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public double getmLatitude() {
+		return mLatitude;
+	}
+	public void setmLatitude(double mLatitude) {
+		this.mLatitude = mLatitude;
+	}
+	public double getmLongtitude() {
+		return mLongtitude;
+	}
+	public void setmLongtitude(double mLongtitude) {
+		this.mLongtitude = mLongtitude;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

@@ -16,6 +16,7 @@ import cn.bmob.v3.listener.SaveListener;
 
 import com.fanxl.ourtrip.adapter.AddFrendsAdapter;
 import com.fanxl.ourtrip.bean.Friend;
+import com.fanxl.ourtrip.bean.MyLocation;
 import com.fanxl.ourtrip.bean.Person;
 import com.fanxl.ourtrip.bean.TripData;
 import com.fanxl.ourtrip.utils.UtilHelper;
@@ -84,21 +85,63 @@ public class AddFriends extends Activity{
 		});
 	}
 	
-	private void addFriends(Person person){
-		Friend friend = new Friend();
-		TripData tripData = TripData.getInstance();
-		friend.setFriendName(person.getUserName());
-		friend.setFriendObjectId(person.getObjectId());
-		friend.setUserId(tripData.getUserId());
-		friend.save(this, new SaveListener() {
+	private void addFriends(final Person person){
+		
+		BmobQuery<MyLocation> bmobQuery = new BmobQuery<MyLocation>();
+		bmobQuery.addWhereEqualTo("userId", person.getUserId());
+		bmobQuery.findObjects(this, new FindListener<MyLocation>() {
 
 			@Override
-			public void onSuccess() {
-				UtilHelper.showMsg(AddFriends.this, "好友添加成功！");
+			public void onSuccess(List<MyLocation> locations) {
+				if(locations!=null && locations.size()>0){
+					Friend friend = new Friend();
+					MyLocation location = locations.get(0);
+					friend.setmLatitude(location.getmLatitude());
+					friend.setmLongtitude(location.getmLongtitude());
+					friend.setAddress(location.getAddress());
+					TripData tripData = TripData.getInstance();
+					friend.setFriendName(person.getUserName());
+					friend.setFriendObjectId(person.getObjectId());
+					friend.setUserId(tripData.getUserId());
+					friend.save(AddFriends.this, new SaveListener() {
+
+						@Override
+						public void onSuccess() {
+							UtilHelper.showMsg(AddFriends.this, "好友添加成功！");
+						}
+
+						@Override
+						public void onFailure(int code, String error) {
+							
+						}
+					});
+					
+//					Friend otherFriend = new Friend();
+//					otherFriend.setmLatitude(tripData.getmLatitude());
+//					otherFriend.setmLongtitude(tripData.getmLongtitude());
+//					otherFriend.setAddress(tripData.getAddress());
+//					otherFriend.setFriendName(tripData.getUserName());
+//					otherFriend.setFriendObjectId(tripData.getObjectId());
+//					otherFriend.setUserId(person.getUserId());
+//					otherFriend.save(AddFriends.this, new SaveListener() {
+//
+//						@Override
+//						public void onSuccess() {
+//							UtilHelper.showMsg(AddFriends.this, "好友添加成功！");
+//						}
+//
+//						@Override
+//						public void onFailure(int code, String error) {
+//							
+//						}
+//					});
+					
+					
+				}
 			}
 
 			@Override
-			public void onFailure(int code, String error) {
+			public void onError(int errorCode, String error) {
 				
 			}
 		});

@@ -20,13 +20,13 @@ public class Info implements Serializable
 
 	static
 	{
-		infos.add(new Info(34.242652, 108.971171, R.drawable.a01, "英伦贵族小旅馆",
+		infos.add(new Info(31.023497, 121.415359, R.drawable.a01, "英伦贵族小旅馆",
 				"距离209米", 1456));
-		infos.add(new Info(34.242952, 108.972171, R.drawable.a02, "沙井国际洗浴会所",
+		infos.add(new Info(31.020588, 121.412862, R.drawable.a02, "沙井国际洗浴会所",
 				"距离897米", 456));
-		infos.add(new Info(34.242852, 108.973171, R.drawable.a03, "五环服装城",
+		infos.add(new Info(31.019706, 121.416689, R.drawable.a03, "五环服装城",
 				"距离249米", 1456));
-		infos.add(new Info(34.242152, 108.971971, R.drawable.a04, "老米家泡馍小炒",
+		infos.add(new Info(31.021795, 121.417174, R.drawable.a04, "老米家泡馍小炒",
 				"距离679米", 1456));
 	}
 
