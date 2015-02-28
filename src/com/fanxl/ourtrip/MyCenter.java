@@ -51,6 +51,7 @@ public class MyCenter extends Fragment implements OnClickListener{
                 //Bitmap bmp = center_ll_header.getDrawingCache();
 				Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.header);
 				//bmp.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+				System.out.println("原图的宽:"+bmp.getWidth()+"---高:"+bmp.getHeight());
                 blur(bmp, center_ll_header);
                 return true;
 			}
@@ -73,9 +74,45 @@ public class MyCenter extends Fragment implements OnClickListener{
         Paint paint = new Paint();
         paint.setFlags(Paint.FILTER_BITMAP_FLAG);
         canvas.drawBitmap(bkg, 0, 0, paint);
-
         overlay = FastBlur.doBlur(overlay, (int)radius, true);
         view.setBackground(new BitmapDrawable(getResources(), overlay));
+        System.out.println("处理之后的宽:"+overlay.getWidth()+"----高:"+overlay.getHeight());
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.center_friend_location:
+			startActivity(new Intent(getActivity(), MapActivity.class));
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.center_friend_location:
+			startActivity(new Intent(getActivity(), MapActivity.class));
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.center_friend_location:
+			startActivity(new Intent(getActivity(), MapActivity.class));
+			break;
+
+		default:
+			break;
+		}
 	}
 
 	@Override
