@@ -14,6 +14,7 @@ public class Person extends BmobObject{
 	private String userName;
 	private String passWord;
 	private String phoneNumber;
+	private String userId;
 	
 	public String getUserName() {
 		return userName;
@@ -32,6 +33,12 @@ public class Person extends BmobObject{
 	}
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+	public String getUserId() {
+		return userId;
+	}
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 	
 	

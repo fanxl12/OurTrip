@@ -1,6 +1,7 @@
 package com.fanxl.ourtrip;
 
 import java.util.List;
+import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -21,6 +22,7 @@ import cn.bmob.v3.listener.UpdateListener;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
+import com.fanxl.ourtrip.bean.MyLocation;
 import com.fanxl.ourtrip.bean.Person;
 import com.fanxl.ourtrip.utils.UtilHelper;
 
@@ -33,7 +35,8 @@ import com.fanxl.ourtrip.utils.UtilHelper;
 public class Regisiter extends Activity {
 
 	private Button register_send_again, register_register;
-	private EditText regisiter_phoneNumber, regisiter_code, regisiter_username, regisiter_passowrd, new_passowrd;
+	private EditText regisiter_phoneNumber, regisiter_code, regisiter_username,
+			regisiter_passowrd, new_passowrd;
 	private Person person;
 	private final int CODE_SEND = 105;
 	private final int CODE_ERROR = 106;
@@ -43,9 +46,11 @@ public class Regisiter extends Activity {
 	private final int UPDATE_FAIL = 110;
 	private int type = 0;
 	private String objectId;
-	
-	@SuppressLint("HandlerLeak") 
-	private Handler handler = new Handler(){
+
+	private MyLocation location;
+
+	@SuppressLint("HandlerLeak")
+	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case CODE_SEND:
@@ -75,13 +80,13 @@ public class Regisiter extends Activity {
 			}
 		};
 	};
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.regisiter);
 		type = getIntent().getIntExtra("type", 0);
-		//初始化短信验证码
+		// 初始化短信验证码
 		SMSSDK.initSDK(this, "567bfb28fe68", "5f6a592e86271c8383fc777cfd5047cf");
 		initView();
 		initVarible();
@@ -97,10 +102,10 @@ public class Regisiter extends Activity {
 					if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
 						// 提交验证码成功
 						System.out.println("验证码验证成功,可以提交数据到服务器了");
-						if(type==LoginActivity.REGISTER){
+						if (type == LoginActivity.REGISTER) {
 							savePerson();
-						}else{
-							//更新密码
+						} else {
+							// 更新密码
 							upatePerson();
 						}
 					} else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
@@ -113,7 +118,7 @@ public class Regisiter extends Activity {
 				} else {
 					((Throwable) data).printStackTrace();
 					String errorInfo = ((Throwable) data).getMessage();
-					if(errorInfo.contains("520")){
+					if (errorInfo.contains("520")) {
 						handler.sendEmptyMessage(CODE_ERROR);
 					}
 				}
@@ -121,48 +126,56 @@ public class Regisiter extends Activity {
 		};
 		SMSSDK.registerEventHandler(eh);
 		person = new Person();
+		location = new MyLocation();
+		location.setmLatitude(0.0);
+		location.setmLongtitude(0.0);
 	}
-	
-	private void checkPerson(final String phoneNumber, final String code){
+
+	private void checkPerson(final String phoneNumber, final String code) {
 		BmobQuery<Person> bmobQuery = new BmobQuery<Person>();
 		bmobQuery.addWhereEqualTo("phoneNumber", phoneNumber);
 		bmobQuery.findObjects(this, new FindListener<Person>() {
-			
+
 			@Override
 			public void onSuccess(List<Person> persons) {
-				if(type==LoginActivity.REGISTER){
-					UtilHelper.showMsg(Regisiter.this, phoneNumber+"已经注册，请直接登录或者重新输入手机号码");
-				}else{
-					if(persons!=null && persons.size()>0){
+
+				if (persons != null && persons.size() > 0) {
+
+					if (type == LoginActivity.REGISTER) {
+						UtilHelper.showMsg(Regisiter.this, phoneNumber
+								+ "已经注册，请直接登录或者重新输入手机号码");
+					} else {
 						objectId = persons.get(0).getObjectId();
-						System.out.println("objectId----"+objectId);
+						System.out.println("objectId----" + objectId);
 						SMSSDK.submitVerificationCode("86", phoneNumber, code);
-					}else{
-						UtilHelper.showMsg(Regisiter.this, "获取有问题");
 					}
+
+				} else {
+					System.out.println("用户不存在可以注册");
+					SMSSDK.submitVerificationCode("86", phoneNumber, code);
 				}
 			}
-			
+
 			@Override
 			public void onError(int errorCode, String error) {
-				if(type==LoginActivity.REGISTER){
-					System.out.println("用户不存在可以注册"+error);
+				if (type == LoginActivity.REGISTER) {
+					System.out.println("用户不存在可以注册" + error);
 					SMSSDK.submitVerificationCode("86", phoneNumber, code);
-				}else{
+				} else {
 					UtilHelper.showMsg(Regisiter.this, "该手机号码未注册，请确认!");
 				}
 			}
 		});
 	}
-	
-	private void savePerson(){
+
+	private void savePerson() {
 		person.save(this, new SaveListener() {
-			
+
 			@Override
 			public void onSuccess() {
 				handler.sendEmptyMessage(SAVE_SUCCESS);
 			}
-			
+
 			@Override
 			public void onFailure(int code, String error) {
 				Message msg = handler.obtainMessage(SAVE_FAIL);
@@ -170,16 +183,29 @@ public class Regisiter extends Activity {
 				handler.sendMessage(msg);
 			}
 		});
+
+		location.save(this, new SaveListener() {
+
+			@Override
+			public void onSuccess() {
+
+			}
+
+			@Override
+			public void onFailure(int code, String error) {
+
+			}
+		});
 	}
-	
-	private void upatePerson(){
+
+	private void upatePerson() {
 		person.update(this, objectId, new UpdateListener() {
-			
+
 			@Override
 			public void onSuccess() {
 				handler.sendEmptyMessage(UPDATE_SUCCESS);
 			}
-			
+
 			@Override
 			public void onFailure(int code, String error) {
 				Message msg = handler.obtainMessage(UPDATE_FAIL);
@@ -188,7 +214,6 @@ public class Regisiter extends Activity {
 			}
 		});
 	}
-	
 
 	private void initView() {
 		register_send_again = (Button) findViewById(R.id.register_send_again);
@@ -197,7 +222,8 @@ public class Regisiter extends Activity {
 			@Override
 			public void onClick(View v) {
 				String phoneNumber = getInputPhoneNumber();
-				if(phoneNumber==null)return;
+				if (phoneNumber == null)
+					return;
 				SMSSDK.getVerificationCode("86", phoneNumber);
 				countDown();
 			}
@@ -207,72 +233,79 @@ public class Regisiter extends Activity {
 		register_register = (Button) findViewById(R.id.register_register);
 		new_passowrd = (EditText) findViewById(R.id.new_passowrd);
 		register_register.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				String phoneNumber = getInputPhoneNumber();
-				if(phoneNumber==null)return;
+				if (phoneNumber == null)
+					return;
 				String code = regisiter_code.getText().toString().trim();
-				if(TextUtils.isEmpty(code)){
+				if (TextUtils.isEmpty(code)) {
 					UtilHelper.showMsg(Regisiter.this, "请获取到的验证码!");
 					return;
 				}
-				if(type==LoginActivity.REGISTER){
-					String username = regisiter_username.getText().toString().trim();
-					if(TextUtils.isEmpty(username)){
+				if (type == LoginActivity.REGISTER) {
+					String username = regisiter_username.getText().toString()
+							.trim();
+					if (TextUtils.isEmpty(username)) {
 						UtilHelper.showMsg(Regisiter.this, "用户名不能为空!");
 						return;
 					}
-					String password = regisiter_passowrd.getText().toString().trim();
-					if(TextUtils.isEmpty(password)){
+					String password = regisiter_passowrd.getText().toString()
+							.trim();
+					if (TextUtils.isEmpty(password)) {
 						UtilHelper.showMsg(Regisiter.this, "密码不能为空!");
 						return;
 					}
+
+					String userId = UUID.randomUUID().toString()
+							.replace("-", "");
+					person.setUserId(userId);
+					location.setUserId(userId);
 					person.setUserName(username);
-					person.setPassWord(password);
-				}else{
-					String newPassword = new_passowrd.getText().toString().trim();
-					if(TextUtils.isEmpty(newPassword)){
+					person.setPassWord(UtilHelper.jdkMD5(password));
+				} else {
+					String newPassword = new_passowrd.getText().toString()
+							.trim();
+					if (TextUtils.isEmpty(newPassword)) {
 						UtilHelper.showMsg(Regisiter.this, "密码不能为空!");
 						return;
 					}
-					person.setPassWord(newPassword);
+					person.setPassWord(UtilHelper.jdkMD5(newPassword));
 				}
-				
+
 				person.setPhoneNumber(phoneNumber);
 				checkPerson(phoneNumber, code);
 			}
 		});
-		
+
 		regisiter_username = (EditText) findViewById(R.id.regisiter_username);
 		regisiter_passowrd = (EditText) findViewById(R.id.regisiter_passowrd);
-		if(type == LoginActivity.REGISTER){
+		if (type == LoginActivity.REGISTER) {
 			regisiter_username.setVisibility(View.VISIBLE);
 			regisiter_passowrd.setVisibility(View.VISIBLE);
 			register_register.setText("注册");
 			new_passowrd.setVisibility(View.GONE);
-		}else{
+		} else {
 			regisiter_username.setVisibility(View.GONE);
 			regisiter_passowrd.setVisibility(View.GONE);
 			register_register.setText("提交");
 			new_passowrd.setVisibility(View.VISIBLE);
 		}
 	}
-	
-	private String getInputPhoneNumber(){
+
+	private String getInputPhoneNumber() {
 		String phoneNumber = regisiter_phoneNumber.getText().toString().trim();
-		if(TextUtils.isEmpty(phoneNumber)){
+		if (TextUtils.isEmpty(phoneNumber)) {
 			UtilHelper.showMsg(Regisiter.this, "请填写手机号码!");
 			return null;
 		}
-		if(!TextUtils.isDigitsOnly(phoneNumber) || phoneNumber.length()!=11){
+		if (!TextUtils.isDigitsOnly(phoneNumber) || phoneNumber.length() != 11) {
 			UtilHelper.showMsg(Regisiter.this, "手机号码填写有误!");
 			return null;
 		}
 		return phoneNumber;
 	}
-
-	
 
 	private void countDown() {
 		register_send_again.setEnabled(false);
@@ -291,7 +324,7 @@ public class Regisiter extends Activity {
 			}
 		}.start();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

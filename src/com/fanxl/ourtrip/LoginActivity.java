@@ -2,17 +2,22 @@ package com.fanxl.ourtrip;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.listener.FindListener;
 
 import com.fanxl.ourtrip.bean.Person;
+import com.fanxl.ourtrip.bean.TripData;
 import com.fanxl.ourtrip.utils.UtilHelper;
 
 public class LoginActivity extends Activity implements OnClickListener{
@@ -20,12 +25,28 @@ public class LoginActivity extends Activity implements OnClickListener{
 	private EditText login_username, login_password;
 	public static final int REGISTER = 1;
 	public static final int FORGET_PASSWORD = 2;
+	private CheckBox login_save_account;
+	private SharedPreferences sp;
+	public static final String USERNAME= "userName";
+	public static final String PASSWORD = "password";
+	public static final String ISSAVEACCOUNT = "isSaveAccount";
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		initView();
+		initVarible();
+	}
+
+	private void initVarible() {
+		sp = getSharedPreferences("OutTrip", Activity.MODE_PRIVATE);
+		if(sp.getBoolean(ISSAVEACCOUNT, false)){
+			login_save_account.setChecked(true);
+			login_username.setText(sp.getString(USERNAME, ""));
+			login_password.setText(sp.getString(PASSWORD, ""));
+		}
 	}
 
 	private void initView() {
@@ -35,6 +56,8 @@ public class LoginActivity extends Activity implements OnClickListener{
 		
 		login_username = (EditText) findViewById(R.id.login_username);
 		login_password = (EditText) findViewById(R.id.login_password);
+		
+		login_save_account = (CheckBox) findViewById(R.id.login_save_account);
 	}
 
 	@Override
@@ -74,12 +97,23 @@ public class LoginActivity extends Activity implements OnClickListener{
 		
 		BmobQuery<Person> bmobQuery = new BmobQuery<Person>();
 		bmobQuery.addWhereEqualTo("userName", username);
-		bmobQuery.addWhereEqualTo("passWord", password);
+		bmobQuery.addWhereEqualTo("passWord", password.length()==32?password:UtilHelper.jdkMD5(password));
 		bmobQuery.findObjects(this, new FindListener<Person>() {
 			
-			@Override
+			@SuppressLint("CommitPrefEdits") @Override
 			public void onSuccess(List<Person> persons) {
 				if(persons!=null && persons.size()>0){
+					Person person = persons.get(0);
+					Editor editor = sp.edit();
+					if(login_save_account.isChecked()){
+						editor.putBoolean(ISSAVEACCOUNT, true);
+						editor.putString(USERNAME, person.getUserName());
+						editor.putString(PASSWORD, person.getPassWord());
+					}else{
+						editor.clear();
+					}
+					editor.commit();
+					TripData.getInstance().setUserId(person.getUserId());
 					UtilHelper.showMsg(LoginActivity.this, "登录成功!");
 					startActivity(new Intent(LoginActivity.this, MainActivity.class));
 					finish();

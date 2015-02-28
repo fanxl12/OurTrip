@@ -2,11 +2,13 @@ package com.fanxl.ourtrip;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,18 +16,21 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.listener.FindListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -33,13 +38,14 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.map.InfoWindow.OnInfoWindowClickListener;
 import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.fanxl.ourtrip.MyOrientationListener.OnOrientationListener;
 import com.fanxl.ourtrip.bean.Info;
+import com.fanxl.ourtrip.bean.MyLocation;
+import com.fanxl.ourtrip.bean.TripData;
 import com.fanxl.ourtrip.utils.UtilHelper;
 
 public class MapActivity extends Activity {
@@ -53,6 +59,7 @@ public class MapActivity extends Activity {
 	private LocationClient mLocationClient;
 	private MyLocationListener myLocationListener;
 	
+	//当前位置的经纬度
 	private double mLatitude;
 	private double mLongtitude;
 	
@@ -66,13 +73,28 @@ public class MapActivity extends Activity {
 	private BitmapDescriptor mMarker;
 	private RelativeLayout mMarkerLy;
 	
+	//保存位置到服务器
+	private MyLocation myLocation;
+	private final int GET_LOCATION_SUCCESS = 100;
+	
+	@SuppressLint("HandlerLeak") 
+	private Handler handler = new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case GET_LOCATION_SUCCESS:
+				updateLocation();
+				break;
+
+			default:
+				break;
+			}
+		};
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		//在使用SDK各组件之前初始化context信息，传入ApplicationContext  
-        //注意该方法要再setContentView方法之前实现  
-        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.map_activity);
         this.mContext=this;
         initView();
@@ -149,6 +171,9 @@ public class MapActivity extends Activity {
 	}
 
 	private void initLoaction() {
+		
+		myLocation = new MyLocation();
+		myLocation.setUserId(TripData.getInstance().getUserId());
 		
 		mLocationMode = LocationMode.NORMAL;
 		
@@ -228,6 +253,9 @@ public class MapActivity extends Activity {
 			mLatitude = location.getLatitude();
 			mLongtitude = location.getLongitude();
 			
+			myLocation.setmLatitude(mLatitude);
+			myLocation.setmLongtitude(mLongtitude);
+			
 			MyLocationData data = new MyLocationData.Builder()
 			.direction(mCurrentX)
 			.accuracy(location.getRadius())
@@ -245,6 +273,7 @@ public class MapActivity extends Activity {
 				isFistIn = false;
 			}
 			
+			getObjectId();
 		}
 
 		
@@ -328,6 +357,50 @@ public class MapActivity extends Activity {
 		}
 		MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
 		mBaiduMap.animateMapStatus(msu);
+	}
+	
+	private void getObjectId(){
+		if(TripData.getInstance().getLocationObjectId()==null){
+			getLocationObjectId();
+		}else{
+			handler.sendEmptyMessage(GET_LOCATION_SUCCESS);
+		}
+	}
+	
+	private void updateLocation(){
+		myLocation.update(this, TripData.getInstance().getLocationObjectId(), new UpdateListener() {
+			
+			@Override
+			public void onSuccess() {
+				
+			}
+			
+			@Override
+			public void onFailure(int errorCode, String error) {
+				
+			}
+		});
+	}
+	
+	private void getLocationObjectId(){
+		BmobQuery<MyLocation> bmobQuery = new BmobQuery<MyLocation>();
+		bmobQuery.addWhereEqualTo("userId", TripData.getInstance().getUserId());
+		bmobQuery.findObjects(this, new FindListener<MyLocation>() {
+			
+			@Override
+			public void onSuccess(List<MyLocation> myLocations) {
+				if(myLocations!=null && myLocations.size()>0){
+					TripData.getInstance().setUserId(myLocations.get(0).getObjectId());
+					handler.sendEmptyMessage(GET_LOCATION_SUCCESS);
+				}
+			}
+			
+			@Override
+			public void onError(int errorCode, String error) {
+				
+			}
+		});
+		
 	}
 
 }

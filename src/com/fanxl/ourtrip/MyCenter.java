@@ -1,6 +1,7 @@
 package com.fanxl.ourtrip;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,13 +13,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
 import com.fanxl.ourtrip.utils.FastBlur;
 
-public class MyCenter extends Fragment{
+public class MyCenter extends Fragment implements OnClickListener{
 	
 	private View rootView;
 	private LinearLayout center_ll_header;
@@ -54,6 +56,8 @@ public class MyCenter extends Fragment{
 			}
 			
 		});
+		
+		rootView.findViewById(R.id.center_friend_location).setOnClickListener(this);
 	}
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN) 
@@ -72,5 +76,17 @@ public class MyCenter extends Fragment{
 
         overlay = FastBlur.doBlur(overlay, (int)radius, true);
         view.setBackground(new BitmapDrawable(getResources(), overlay));
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.center_friend_location:
+			startActivity(new Intent(getActivity(), MapActivity.class));
+			break;
+
+		default:
+			break;
+		}
 	}
 }

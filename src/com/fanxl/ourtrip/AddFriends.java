@@ -1,0 +1,13 @@
+package com.fanxl.ourtrip;
+
+import android.app.Activity;
+import android.os.Bundle;
+
+public class AddFriends extends Activity{
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+
+}
